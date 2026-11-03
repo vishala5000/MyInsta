@@ -161,13 +161,16 @@ An extremely unremarkable, casual iPhone snapshot of [SUBJECT/SCENE]. Careless f
         }
         layout.addView(hint)
 
+        // FIXED: White background, black text, visible hint
         val input = EditText(this).apply {
             setHint("Type prompt here...")
+            setHintTextColor(Color.parseColor("#888888"))
             minLines = 5
             gravity = Gravity.TOP
             setPadding(30, 30, 30, 30)
             textSize = 16f
-            setBackgroundColor(Color.parseColor("#F5F5F5"))
+            setBackgroundColor(Color.WHITE)
+            setTextColor(Color.BLACK)
         }
         layout.addView(input, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { topMargin = 15; bottomMargin = 30 })
 
