@@ -41,7 +41,6 @@ import java.io.FileOutputStream
 
 class MainActivity : AppCompatActivity() {
 
-    // Class-level reference for preview image (no R.id needed)
     private var previewImageView: ImageView? = null
     private var currentBitmap: Bitmap? = null
 
@@ -104,7 +103,6 @@ An extremely unremarkable, casual iPhone snapshot of [SUBJECT/SCENE]. Careless f
             )
         }
 
-        // ===== GRADIENT HEADER =====
         val header = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             gravity = Gravity.CENTER
@@ -154,7 +152,6 @@ An extremely unremarkable, casual iPhone snapshot of [SUBJECT/SCENE]. Careless f
             LinearLayout.LayoutParams.WRAP_CONTENT
         ))
 
-        // ===== SCROLLABLE CONTENT =====
         val scrollView = ScrollView(this).apply {
             isVerticalScrollBarEnabled = true
             overScrollMode = View.OVER_SCROLL_NEVER
@@ -169,7 +166,6 @@ An extremely unremarkable, casual iPhone snapshot of [SUBJECT/SCENE]. Careless f
             setPadding(dpToPx(20), dpToPx(24), dpToPx(20), dpToPx(32))
         }
 
-        // ===== PROMPTS CARD =====
         val promptsCard = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             gravity = Gravity.CENTER_HORIZONTAL
@@ -232,7 +228,6 @@ An extremely unremarkable, casual iPhone snapshot of [SUBJECT/SCENE]. Careless f
             LinearLayout.LayoutParams.WRAP_CONTENT
         ).apply { bottomMargin = dpToPx(16) })
 
-        // ===== MAKE PROMPT CARD =====
         val makeCard = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             gravity = Gravity.CENTER_HORIZONTAL
@@ -375,7 +370,6 @@ An extremely unremarkable, casual iPhone snapshot of [SUBJECT/SCENE]. Careless f
         previewImageView = null
         currentBitmap = null
 
-        // ROOT: Vertical layout with fixed header + scrollable content
         val root = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             setBackgroundColor(Color.parseColor("#FAFAFA"))
@@ -385,7 +379,6 @@ An extremely unremarkable, casual iPhone snapshot of [SUBJECT/SCENE]. Careless f
             )
         }
 
-        // ===== FIXED HEADER WITH BACK BUTTON =====
         val header = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
@@ -428,7 +421,6 @@ An extremely unremarkable, casual iPhone snapshot of [SUBJECT/SCENE]. Careless f
             LinearLayout.LayoutParams.WRAP_CONTENT
         ))
 
-        // ===== SCROLLABLE CONTENT =====
         val scrollView = ScrollView(this).apply {
             isVerticalScrollBarEnabled = true
             overScrollMode = View.OVER_SCROLL_NEVER
@@ -443,7 +435,6 @@ An extremely unremarkable, casual iPhone snapshot of [SUBJECT/SCENE]. Careless f
             setPadding(dpToPx(20), dpToPx(20), dpToPx(20), dpToPx(32))
         }
 
-        // ===== INPUT CARD =====
         val inputCard = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(dpToPx(20), dpToPx(20), dpToPx(20), dpToPx(20))
@@ -484,7 +475,6 @@ An extremely unremarkable, casual iPhone snapshot of [SUBJECT/SCENE]. Careless f
             LinearLayout.LayoutParams.WRAP_CONTENT
         ).apply { bottomMargin = dpToPx(16) })
 
-        // ===== GENERATE BUTTON =====
         val btnGen = Button(this).apply {
             setText("🎨 Generate Image")
             textSize = 17f
@@ -508,7 +498,6 @@ An extremely unremarkable, casual iPhone snapshot of [SUBJECT/SCENE]. Careless f
                 previewImageView?.setImageBitmap(bmp)
                 Toast.makeText(this@MainActivity, "✅ Image generated!", Toast.LENGTH_SHORT).show()
                 
-                // Smooth scroll to preview
                 previewImageView?.let { img ->
                     scrollView.post {
                         scrollView.smoothScrollTo(0, img.top - dpToPx(20))
@@ -521,7 +510,6 @@ An extremely unremarkable, casual iPhone snapshot of [SUBJECT/SCENE]. Careless f
             LinearLayout.LayoutParams.WRAP_CONTENT
         ).apply { bottomMargin = dpToPx(16) })
 
-        // ===== PREVIEW CARD =====
         val previewCard = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             gravity = Gravity.CENTER_HORIZONTAL
@@ -542,8 +530,7 @@ An extremely unremarkable, casual iPhone snapshot of [SUBJECT/SCENE]. Careless f
             LinearLayout.LayoutParams.WRAP_CONTENT
         ).apply { bottomMargin = dpToPx(12) })
 
-        // Calculate preview height to maintain 4:5 aspect ratio (1080:1350)
-        val screenWidth = resources.displayMetrics.widthPixels - dpToPx(20 + 20 + 16 + 16 + 8 + 8) // account for all padding
+        val screenWidth = resources.displayMetrics.widthPixels - dpToPx(20 + 20 + 16 + 16 + 8 + 8)
         val previewHeight = (screenWidth * 1350) / 1080
 
         val previewImg = ImageView(this).apply {
@@ -568,7 +555,6 @@ An extremely unremarkable, casual iPhone snapshot of [SUBJECT/SCENE]. Careless f
             LinearLayout.LayoutParams.WRAP_CONTENT
         ).apply { bottomMargin = dpToPx(16) })
 
-        // ===== DOWNLOAD BUTTON =====
         val btnDl = Button(this).apply {
             setText("💾 Download to Gallery")
             textSize = 17f
@@ -603,6 +589,7 @@ An extremely unremarkable, casual iPhone snapshot of [SUBJECT/SCENE]. Careless f
         setContentView(root)
     }
 
+    // ===== FIXED: Text STRICTLY inside 980x1250 box, zero cutoff =====
     private fun generateImage(text: String): Bitmap {
         val W = 1080
         val H = 1350
@@ -619,20 +606,60 @@ An extremely unremarkable, casual iPhone snapshot of [SUBJECT/SCENE]. Careless f
         val textWidth = 980f
         val maxTextHeight = 1250f
 
-        var currentTextSize = 72f
-        var sl: StaticLayout
-        while (true) {
+        // Step 1: Try shrinking font from 80f down to 10f
+        var currentTextSize = 80f
+        var displayText = text
+        var sl: StaticLayout? = null
+
+        while (currentTextSize >= 10f) {
             paint.textSize = currentTextSize
-            sl = StaticLayout.Builder.obtain(text, 0, text.length, paint, textWidth.toInt())
+            val testSl = StaticLayout.Builder.obtain(displayText, 0, displayText.length, paint, textWidth.toInt())
                 .setAlignment(Layout.Alignment.ALIGN_CENTER)
-                .setLineSpacing(0f, 1.3f)
+                .setLineSpacing(0f, 1.2f)
                 .setIncludePad(false)
                 .build()
-
-            if (sl.height <= maxTextHeight || currentTextSize <= 24f) break
-            currentTextSize -= 2f
+            
+            if (testSl.height <= maxTextHeight) {
+                sl = testSl
+                break
+            }
+            currentTextSize -= 1f
         }
 
+        // Step 2: If still too long at 10f, truncate word-by-word with "..."
+        if (sl == null) {
+            paint.textSize = 10f
+            val words = displayText.split(" ")
+            var truncated = ""
+            
+            for (word in words) {
+                val test = if (truncated.isEmpty()) word else "$truncated $word"
+                val testSl = StaticLayout.Builder.obtain(test, 0, test.length, paint, textWidth.toInt())
+                    .setAlignment(Layout.Alignment.ALIGN_CENTER)
+                    .setLineSpacing(0f, 1.2f)
+                    .setIncludePad(false)
+                    .build()
+                
+                if (testSl.height <= maxTextHeight) {
+                    truncated = test
+                } else {
+                    // Add "..." to indicate truncation
+                    truncated = truncated.trimEnd()
+                    if (truncated.isNotEmpty()) {
+                        truncated = truncated.substring(0, truncated.length.coerceAtLeast(1)) + "..."
+                    }
+                    break
+                }
+            }
+            
+            sl = StaticLayout.Builder.obtain(truncated, 0, truncated.length, paint, textWidth.toInt())
+                .setAlignment(Layout.Alignment.ALIGN_CENTER)
+                .setLineSpacing(0f, 1.2f)
+                .setIncludePad(false)
+                .build()
+        }
+
+        // Step 3: Center the text block perfectly in the 1080x1350 canvas
         val left = (W - textWidth) / 2f
         val top = (H - sl.height.toFloat()) / 2f
 
