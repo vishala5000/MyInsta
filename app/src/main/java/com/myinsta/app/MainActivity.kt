@@ -23,7 +23,13 @@ import android.text.Layout
 import android.text.StaticLayout
 import android.text.TextPaint
 import android.view.Gravity
-import android.widget.*
+import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.ScrollView
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -70,16 +76,16 @@ An extremely unremarkable, casual iPhone snapshot of [SUBJECT/SCENE]. Careless f
         }
 
         val title = TextView(this).apply {
-            text = "My Insta"
+            setText("My Insta")
             textSize = 36f
             setTextColor(Color.parseColor("#E1306C"))
             gravity = Gravity.CENTER
-            setTypeface(null, android.graphics.Typeface.BOLD)
+            setTypeface(null, Typeface.BOLD)
         }
         root.addView(title, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { bottomMargin = 80 })
 
         val btnPrompts = Button(this).apply {
-            text = "Prompts"
+            setText("Prompts")
             textSize = 20f
             setPadding(0, 30, 0, 30)
             setOnClickListener { showPromptsDialog() }
@@ -87,7 +93,7 @@ An extremely unremarkable, casual iPhone snapshot of [SUBJECT/SCENE]. Careless f
         root.addView(btnPrompts, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { bottomMargin = 30 })
 
         val btnMake = Button(this).apply {
-            text = "Make Prompt"
+            setText("Make Prompt")
             textSize = 20f
             setPadding(0, 30, 0, 30)
             setOnClickListener { setupMakePromptScreen() }
@@ -99,20 +105,32 @@ An extremely unremarkable, casual iPhone snapshot of [SUBJECT/SCENE]. Careless f
 
     private fun showPromptsDialog() {
         val dialog = AlertDialog.Builder(this).setTitle("Copy Prompts").create()
-        val layout = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setPadding(40, 40, 40, 40) }
+        val layout = LinearLayout(this).apply { 
+            orientation = LinearLayout.VERTICAL
+            setPadding(40, 40, 40, 40) 
+        }
         
         val b1 = Button(this).apply {
-            text = "Copy Photo Prompt"
+            setText("Copy Photo Prompt")
             textSize = 16f
-            setOnClickListener { copyToClipboard(PHOTO_PROMPT); Toast.makeText(this@MainActivity, "Photo prompt copied!", Toast.LENGTH_SHORT).show(); dialog.dismiss() }
+            setOnClickListener { 
+                copyToClipboard(PHOTO_PROMPT)
+                Toast.makeText(this@MainActivity, "Photo prompt copied!", Toast.LENGTH_SHORT).show()
+                dialog.dismiss() 
+            }
         }
         val b2 = Button(this).apply {
-            text = "Copy Caption Prompt"
+            setText("Copy Caption Prompt")
             textSize = 16f
-            setOnClickListener { copyToClipboard(CAPTION_PROMPT); Toast.makeText(this@MainActivity, "Caption prompt copied!", Toast.LENGTH_SHORT).show(); dialog.dismiss() }
+            setOnClickListener { 
+                copyToClipboard(CAPTION_PROMPT)
+                Toast.makeText(this@MainActivity, "Caption prompt copied!", Toast.LENGTH_SHORT).show()
+                dialog.dismiss() 
+            }
         }
         
-        layout.addView(b1); layout.addView(b2)
+        layout.addView(b1)
+        layout.addView(b2)
         dialog.setView(layout)
         dialog.show()
     }
@@ -131,16 +149,20 @@ An extremely unremarkable, casual iPhone snapshot of [SUBJECT/SCENE]. Careless f
         }
 
         val btnBack = Button(this).apply {
-            text = "← Back to Main"
+            setText("← Back to Main")
             setOnClickListener { setupMainScreen() }
         }
         layout.addView(btnBack, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { bottomMargin = 20 })
 
-        val hint = TextView(this).apply { text = "Enter your prompt below:"; textSize = 18f; setTypeface(null, android.graphics.Typeface.BOLD) }
+        val hint = TextView(this).apply { 
+            setText("Enter your prompt below:")
+            textSize = 18f
+            setTypeface(null, Typeface.BOLD) 
+        }
         layout.addView(hint)
 
         val input = EditText(this).apply {
-            hint = "Type prompt here..."
+            setHint("Type prompt here...")
             minLines = 5
             gravity = Gravity.TOP
             setPadding(30, 30, 30, 30)
@@ -158,12 +180,15 @@ An extremely unremarkable, casual iPhone snapshot of [SUBJECT/SCENE]. Careless f
         layout.addView(previewImg, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { bottomMargin = 30 })
 
         val btnGen = Button(this).apply {
-            text = "Generate Image"
+            setText("Generate Image")
             textSize = 18f
             setPadding(0, 30, 0, 30)
             setOnClickListener {
                 val txt = input.text.toString().trim()
-                if (txt.isBlank()) { Toast.makeText(this@MainActivity, "Please enter a prompt first", Toast.LENGTH_SHORT).show(); return@setOnClickListener }
+                if (txt.isBlank()) { 
+                    Toast.makeText(this@MainActivity, "Please enter a prompt first", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener 
+                }
                 val bmp = generateImage(txt)
                 previewImg.setImageBitmap(bmp)
                 previewImg.tag = bmp
@@ -173,14 +198,17 @@ An extremely unremarkable, casual iPhone snapshot of [SUBJECT/SCENE]. Careless f
         layout.addView(btnGen, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { bottomMargin = 20 })
 
         val btnDl = Button(this).apply {
-            text = "Download to Gallery"
+            setText("Download to Gallery")
             textSize = 18f
             setPadding(0, 30, 0, 30)
             setBackgroundColor(Color.parseColor("#E1306C"))
             setTextColor(Color.WHITE)
             setOnClickListener {
                 val bmp = previewImg.tag as? Bitmap
-                if (bmp == null) { Toast.makeText(this@MainActivity, "Generate image first", Toast.LENGTH_SHORT).show(); return@setOnClickListener }
+                if (bmp == null) { 
+                    Toast.makeText(this@MainActivity, "Generate image first", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener 
+                }
                 val path = saveImage(bmp)
                 Toast.makeText(this@MainActivity, "Saved: $path", Toast.LENGTH_LONG).show()
                 sendBroadcast(Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(File(path))))
@@ -193,7 +221,8 @@ An extremely unremarkable, casual iPhone snapshot of [SUBJECT/SCENE]. Careless f
     }
 
     private fun generateImage(text: String): Bitmap {
-        val W = 1080; val H = 1350
+        val W = 1080
+        val H = 1350
         val bmp = Bitmap.createBitmap(W, H, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bmp)
         canvas.drawColor(Color.WHITE)
@@ -207,7 +236,6 @@ An extremely unremarkable, casual iPhone snapshot of [SUBJECT/SCENE]. Careless f
         val textWidth = 980f
         val maxTextHeight = 1250f
         
-        // Dynamically scale text size to guarantee NO cutoff and perfect fit within 1250px height
         var currentTextSize = 72f
         var sl: StaticLayout
         while (true) {
@@ -222,7 +250,6 @@ An extremely unremarkable, casual iPhone snapshot of [SUBJECT/SCENE]. Careless f
             currentTextSize -= 2f
         }
 
-        // Perfectly center the text block in the 1080x1350 canvas
         val left = (W - textWidth) / 2f
         val top = (H - sl.height.toFloat()) / 2f
 
