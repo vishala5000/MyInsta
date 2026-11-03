@@ -25,6 +25,7 @@ import android.text.StaticLayout
 import android.text.TextPaint
 import android.util.TypedValue
 import android.view.Gravity
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
@@ -75,15 +76,14 @@ An extremely unremarkable, casual iPhone snapshot of [SUBJECT/SCENE]. Careless f
 
     private fun createGradientDrawable(colors: IntArray, orientation: GradientDrawable.Orientation = GradientDrawable.Orientation.TOP_BOTTOM): GradientDrawable {
         return GradientDrawable(orientation, colors).apply {
-            cornerRadius = dpToPx(20).toFloat()
+            cornerRadius = dpToPx(16).toFloat()
         }
     }
 
     private fun createCardDrawable(): GradientDrawable {
         return GradientDrawable().apply {
             setColor(Color.WHITE)
-            cornerRadius = dpToPx(24).toFloat()
-            setStroke(dpToPx(2), Color.parseColor("#F0F0F0"))
+            cornerRadius = dpToPx(20).toFloat()
         }
     }
 
@@ -97,7 +97,7 @@ An extremely unremarkable, casual iPhone snapshot of [SUBJECT/SCENE]. Careless f
         val header = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             gravity = Gravity.CENTER
-            setPadding(dpToPx(40), dpToPx(60), dpToPx(40), dpToPx(60))
+            setPadding(dpToPx(32), dpToPx(48), dpToPx(32), dpToPx(48))
             background = createGradientDrawable(
                 intArrayOf(
                     Color.parseColor("#833AB4"),
@@ -116,36 +116,41 @@ An extremely unremarkable, casual iPhone snapshot of [SUBJECT/SCENE]. Careless f
 
         val title = TextView(this).apply {
             setText("My Insta")
-            textSize = 42f
+            textSize = 40f
             setTextColor(Color.WHITE)
             gravity = Gravity.CENTER
             setTypeface(null, Typeface.BOLD)
         }
-        header.addView(title, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { topMargin = dpToPx(10) })
+        header.addView(title, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { topMargin = dpToPx(8) })
 
         val subtitle = TextView(this).apply {
             setText("Create Viral Instagram Content")
-            textSize = 16f
-            setTextColor(Color.parseColor("#FFFFFF"))
+            textSize = 15f
+            setTextColor(Color.WHITE)
             gravity = Gravity.CENTER
             setAlpha(0.9f)
         }
-        header.addView(subtitle, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { topMargin = dpToPx(8) })
+        header.addView(subtitle, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { topMargin = dpToPx(6) })
 
         root.addView(header, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT))
 
-        // MAIN CONTENT
+        // SCROLLABLE CONTENT
+        val scrollView = ScrollView(this).apply {
+            isVerticalScrollBarEnabled = true
+            overScrollMode = View.OVER_SCROLL_NEVER
+        }
+
         val content = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            setPadding(dpToPx(24), dpToPx(32), dpToPx(24), dpToPx(32))
+            setPadding(dpToPx(20), dpToPx(24), dpToPx(20), dpToPx(32))
         }
 
         // PROMPTS CARD
         val promptsCard = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            setPadding(dpToPx(28), dpToPx(28), dpToPx(28), dpToPx(28))
+            setPadding(dpToPx(24), dpToPx(24), dpToPx(24), dpToPx(24))
             background = createCardDrawable()
-            elevation = dpToPx(8).toFloat()
+            elevation = dpToPx(6).toFloat()
         }
 
         val promptsIcon = TextView(this).apply {
@@ -162,7 +167,7 @@ An extremely unremarkable, casual iPhone snapshot of [SUBJECT/SCENE]. Careless f
             gravity = Gravity.CENTER
             setTypeface(null, Typeface.BOLD)
         }
-        promptsCard.addView(promptsTitle, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { topMargin = dpToPx(12) })
+        promptsCard.addView(promptsTitle, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { topMargin = dpToPx(8) })
 
         val promptsDesc = TextView(this).apply {
             setText("Copy ready-to-use prompts for photos and captions")
@@ -170,14 +175,14 @@ An extremely unremarkable, casual iPhone snapshot of [SUBJECT/SCENE]. Careless f
             setTextColor(Color.parseColor("#666666"))
             gravity = Gravity.CENTER
         }
-        promptsCard.addView(promptsDesc, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { topMargin = dpToPx(8) })
+        promptsCard.addView(promptsDesc, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { topMargin = dpToPx(6) })
 
         val btnPrompts = Button(this).apply {
             setText("📋  View Prompts")
             textSize = 16f
             setTextColor(Color.WHITE)
             setTypeface(null, Typeface.BOLD)
-            setPadding(dpToPx(20), dpToPx(16), dpToPx(20), dpToPx(16))
+            setPadding(dpToPx(16), dpToPx(14), dpToPx(16), dpToPx(14))
             background = createGradientDrawable(
                 intArrayOf(Color.parseColor("#667EEA"), Color.parseColor("#764BA2")),
                 GradientDrawable.Orientation.LEFT_RIGHT
@@ -185,16 +190,16 @@ An extremely unremarkable, casual iPhone snapshot of [SUBJECT/SCENE]. Careless f
             elevation = dpToPx(4).toFloat()
             setOnClickListener { showPromptsDialog() }
         }
-        promptsCard.addView(btnPrompts, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { topMargin = dpToPx(20) })
+        promptsCard.addView(btnPrompts, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { topMargin = dpToPx(16) })
 
-        content.addView(promptsCard, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { bottomMargin = dpToPx(20) })
+        content.addView(promptsCard, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { bottomMargin = dpToPx(16) })
 
         // MAKE PROMPT CARD
         val makeCard = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            setPadding(dpToPx(28), dpToPx(28), dpToPx(28), dpToPx(28))
+            setPadding(dpToPx(24), dpToPx(24), dpToPx(24), dpToPx(24))
             background = createCardDrawable()
-            elevation = dpToPx(8).toFloat()
+            elevation = dpToPx(6).toFloat()
         }
 
         val makeIcon = TextView(this).apply {
@@ -211,7 +216,7 @@ An extremely unremarkable, casual iPhone snapshot of [SUBJECT/SCENE]. Careless f
             gravity = Gravity.CENTER
             setTypeface(null, Typeface.BOLD)
         }
-        makeCard.addView(makeTitle, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { topMargin = dpToPx(12) })
+        makeCard.addView(makeTitle, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { topMargin = dpToPx(8) })
 
         val makeDesc = TextView(this).apply {
             setText("Generate perfect 4:5 Instagram images with your text")
@@ -219,14 +224,14 @@ An extremely unremarkable, casual iPhone snapshot of [SUBJECT/SCENE]. Careless f
             setTextColor(Color.parseColor("#666666"))
             gravity = Gravity.CENTER
         }
-        makeCard.addView(makeDesc, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { topMargin = dpToPx(8) })
+        makeCard.addView(makeDesc, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { topMargin = dpToPx(6) })
 
         val btnMake = Button(this).apply {
             setText("✨  Start Creating")
             textSize = 16f
             setTextColor(Color.WHITE)
             setTypeface(null, Typeface.BOLD)
-            setPadding(dpToPx(20), dpToPx(16), dpToPx(20), dpToPx(16))
+            setPadding(dpToPx(16), dpToPx(14), dpToPx(16), dpToPx(14))
             background = createGradientDrawable(
                 intArrayOf(Color.parseColor("#F093FB"), Color.parseColor("#F5576C")),
                 GradientDrawable.Orientation.LEFT_RIGHT
@@ -234,11 +239,12 @@ An extremely unremarkable, casual iPhone snapshot of [SUBJECT/SCENE]. Careless f
             elevation = dpToPx(4).toFloat()
             setOnClickListener { setupMakePromptScreen() }
         }
-        makeCard.addView(btnMake, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { topMargin = dpToPx(20) })
+        makeCard.addView(btnMake, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { topMargin = dpToPx(16) })
 
         content.addView(makeCard)
 
-        root.addView(content, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT))
+        scrollView.addView(content)
+        root.addView(scrollView, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT))
 
         setContentView(root)
     }
@@ -247,7 +253,7 @@ An extremely unremarkable, casual iPhone snapshot of [SUBJECT/SCENE]. Careless f
         val dialog = AlertDialog.Builder(this).create()
         val layout = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            setPadding(dpToPx(32), dpToPx(32), dpToPx(32), dpToPx(32))
+            setPadding(dpToPx(28), dpToPx(28), dpToPx(28), dpToPx(28))
             setBackgroundColor(Color.WHITE)
         }
 
@@ -258,15 +264,14 @@ An extremely unremarkable, casual iPhone snapshot of [SUBJECT/SCENE]. Careless f
             gravity = Gravity.CENTER
             setTypeface(null, Typeface.BOLD)
         }
-        layout.addView(title, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { bottomMargin = dpToPx(24) })
+        layout.addView(title, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { bottomMargin = dpToPx(20) })
 
-        // Photo Prompt Button
         val b1 = Button(this).apply {
             setText("📷  Copy Photo Prompt")
             textSize = 16f
             setTextColor(Color.WHITE)
             setTypeface(null, Typeface.BOLD)
-            setPadding(dpToPx(20), dpToPx(18), dpToPx(20), dpToPx(18))
+            setPadding(dpToPx(16), dpToPx(16), dpToPx(16), dpToPx(16))
             background = createGradientDrawable(
                 intArrayOf(Color.parseColor("#4FACFE"), Color.parseColor("#00F2FE")),
                 GradientDrawable.Orientation.LEFT_RIGHT
@@ -278,15 +283,14 @@ An extremely unremarkable, casual iPhone snapshot of [SUBJECT/SCENE]. Careless f
                 dialog.dismiss()
             }
         }
-        layout.addView(b1, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { bottomMargin = dpToPx(16) })
+        layout.addView(b1, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { bottomMargin = dpToPx(12) })
 
-        // Caption Prompt Button
         val b2 = Button(this).apply {
             setText("💬  Copy Caption Prompt")
             textSize = 16f
             setTextColor(Color.WHITE)
             setTypeface(null, Typeface.BOLD)
-            setPadding(dpToPx(20), dpToPx(18), dpToPx(20), dpToPx(18))
+            setPadding(dpToPx(16), dpToPx(16), dpToPx(16), dpToPx(16))
             background = createGradientDrawable(
                 intArrayOf(Color.parseColor("#FA709A"), Color.parseColor("#FEE140")),
                 GradientDrawable.Orientation.LEFT_RIGHT
@@ -311,17 +315,17 @@ An extremely unremarkable, casual iPhone snapshot of [SUBJECT/SCENE]. Careless f
     }
 
     private fun setupMakePromptScreen() {
-        val scrollView = ScrollView(this)
-        val layout = LinearLayout(this).apply {
+        // ROOT: Vertical layout with fixed header + scrollable content
+        val root = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             setBackgroundColor(Color.parseColor("#FAFAFA"))
         }
 
-        // HEADER WITH BACK BUTTON
+        // FIXED HEADER WITH BACK BUTTON
         val header = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
-            setPadding(dpToPx(20), dpToPx(20), dpToPx(20), dpToPx(20))
+            setPadding(dpToPx(16), dpToPx(16), dpToPx(16), dpToPx(16))
             background = createGradientDrawable(
                 intArrayOf(Color.parseColor("#833AB4"), Color.parseColor("#E1306C")),
                 GradientDrawable.Orientation.LEFT_RIGHT
@@ -333,8 +337,11 @@ An extremely unremarkable, casual iPhone snapshot of [SUBJECT/SCENE]. Careless f
             textSize = 14f
             setTextColor(Color.WHITE)
             setTypeface(null, Typeface.BOLD)
-            setPadding(dpToPx(16), dpToPx(10), dpToPx(16), dpToPx(10))
-            setBackgroundColor(Color.parseColor("#00000000"))
+            setPadding(dpToPx(12), dpToPx(8), dpToPx(12), dpToPx(8))
+            background = GradientDrawable().apply {
+                setColor(Color.parseColor("#40000000"))
+                cornerRadius = dpToPx(12).toFloat()
+            }
             setOnClickListener { setupMainScreen() }
         }
         header.addView(btnBack)
@@ -347,20 +354,26 @@ An extremely unremarkable, casual iPhone snapshot of [SUBJECT/SCENE]. Careless f
         }
         header.addView(headerTitle, LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { leftMargin = dpToPx(12) })
 
-        layout.addView(header, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT))
+        root.addView(header, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT))
 
-        // CONTENT
+        // SCROLLABLE CONTENT
+        val scrollView = ScrollView(this).apply {
+            isVerticalScrollBarEnabled = true
+            overScrollMode = View.OVER_SCROLL_NEVER
+            isFillViewport = true
+        }
+
         val content = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            setPadding(dpToPx(24), dpToPx(24), dpToPx(24), dpToPx(32))
+            setPadding(dpToPx(20), dpToPx(20), dpToPx(20), dpToPx(24))
         }
 
         // INPUT CARD
         val inputCard = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            setPadding(dpToPx(24), dpToPx(24), dpToPx(24), dpToPx(24))
+            setPadding(dpToPx(20), dpToPx(20), dpToPx(20), dpToPx(20))
             background = createCardDrawable()
-            elevation = dpToPx(6).toFloat()
+            elevation = dpToPx(4).toFloat()
         }
 
         val inputLabel = TextView(this).apply {
@@ -374,11 +387,12 @@ An extremely unremarkable, casual iPhone snapshot of [SUBJECT/SCENE]. Careless f
         val input = EditText(this).apply {
             setHint("Type your creative prompt here...")
             setHintTextColor(Color.parseColor("#AAAAAA"))
-            minLines = 5
+            minLines = 4
+            maxLines = 8
             gravity = Gravity.TOP
-            setPadding(dpToPx(20), dpToPx(20), dpToPx(20), dpToPx(20))
+            setPadding(dpToPx(16), dpToPx(16), dpToPx(16), dpToPx(16))
             textSize = 15f
-            setBackgroundColor(Color.parseColor("#F8F9FA"))
+            setBackgroundColor(Color.WHITE)
             setTextColor(Color.BLACK)
         }
         input.background = GradientDrawable().apply {
@@ -388,46 +402,15 @@ An extremely unremarkable, casual iPhone snapshot of [SUBJECT/SCENE]. Careless f
         }
         inputCard.addView(input, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { topMargin = dpToPx(12) })
 
-        content.addView(inputCard, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { bottomMargin = dpToPx(20) })
+        content.addView(inputCard, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { bottomMargin = dpToPx(16) })
 
-        // PREVIEW CARD
-        val previewCard = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(dpToPx(16), dpToPx(16), dpToPx(16), dpToPx(16))
-            background = createCardDrawable()
-            elevation = dpToPx(6).toFloat()
-        }
-
-        val previewLabel = TextView(this).apply {
-            setText("🖼️ Preview")
-            textSize = 18f
-            setTextColor(Color.parseColor("#2D2D2D"))
-            setTypeface(null, Typeface.BOLD)
-            gravity = Gravity.CENTER
-        }
-        previewCard.addView(previewLabel, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { bottomMargin = dpToPx(12) })
-
-        val previewImg = ImageView(this).apply {
-            adjustViewBounds = true
-            scaleType = ImageView.ScaleType.FIT_CENTER
-            setBackgroundColor(Color.parseColor("#F0F0F0"))
-            setPadding(dpToPx(8), dpToPx(8), dpToPx(8), dpToPx(8))
-        }
-        previewImg.background = GradientDrawable().apply {
-            setColor(Color.parseColor("#F0F0F0"))
-            cornerRadius = dpToPx(12).toFloat()
-        }
-        previewCard.addView(previewImg, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT))
-
-        content.addView(previewCard, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { bottomMargin = dpToPx(20) })
-
-        // ACTION BUTTONS
+        // GENERATE BUTTON - PROMINENT AND ALWAYS VISIBLE
         val btnGen = Button(this).apply {
             setText("🎨 Generate Image")
             textSize = 17f
             setTextColor(Color.WHITE)
             setTypeface(null, Typeface.BOLD)
-            setPadding(dpToPx(20), dpToPx(18), dpToPx(20), dpToPx(18))
+            setPadding(dpToPx(16), dpToPx(16), dpToPx(16), dpToPx(16))
             background = createGradientDrawable(
                 intArrayOf(Color.parseColor("#667EEA"), Color.parseColor("#764BA2")),
                 GradientDrawable.Orientation.LEFT_RIGHT
@@ -440,19 +423,57 @@ An extremely unremarkable, casual iPhone snapshot of [SUBJECT/SCENE]. Careless f
                     return@setOnClickListener
                 }
                 val bmp = generateImage(txt)
+                val previewImg = findViewById<ImageView>(R.id.preview_image)
                 previewImg.setImageBitmap(bmp)
                 previewImg.tag = bmp
                 Toast.makeText(this@MainActivity, "✅ Image generated!", Toast.LENGTH_SHORT).show()
+                
+                // Scroll to preview
+                scrollView.smoothScrollTo(0, previewImg.top)
             }
         }
-        content.addView(btnGen, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { bottomMargin = dpToPx(12) })
+        content.addView(btnGen, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { bottomMargin = dpToPx(16) })
 
+        // PREVIEW CARD
+        val previewCard = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(dpToPx(16), dpToPx(16), dpToPx(16), dpToPx(16))
+            background = createCardDrawable()
+            elevation = dpToPx(4).toFloat()
+        }
+
+        val previewLabel = TextView(this).apply {
+            setText("🖼️ Preview")
+            textSize = 18f
+            setTextColor(Color.parseColor("#2D2D2D"))
+            setTypeface(null, Typeface.BOLD)
+            gravity = Gravity.CENTER
+        }
+        previewCard.addView(previewLabel, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { bottomMargin = dpToPx(12) })
+
+        val previewImg = ImageView(this).apply {
+            id = R.id.preview_image
+            adjustViewBounds = true
+            scaleType = ImageView.ScaleType.FIT_CENTER
+            minimumHeight = dpToPx(300)
+            setBackgroundColor(Color.parseColor("#F0F0F0"))
+            setPadding(dpToPx(8), dpToPx(8), dpToPx(8), dpToPx(8))
+        }
+        previewImg.background = GradientDrawable().apply {
+            setColor(Color.parseColor("#F0F0F0"))
+            cornerRadius = dpToPx(12).toFloat()
+        }
+        previewCard.addView(previewImg, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(400)))
+
+        content.addView(previewCard, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { bottomMargin = dpToPx(16) })
+
+        // DOWNLOAD BUTTON - ALWAYS VISIBLE AT BOTTOM
         val btnDl = Button(this).apply {
             setText("💾 Download to Gallery")
             textSize = 17f
             setTextColor(Color.WHITE)
             setTypeface(null, Typeface.BOLD)
-            setPadding(dpToPx(20), dpToPx(18), dpToPx(20), dpToPx(18))
+            setPadding(dpToPx(16), dpToPx(16), dpToPx(16), dpToPx(16))
             background = createGradientDrawable(
                 intArrayOf(Color.parseColor("#F093FB"), Color.parseColor("#F5576C")),
                 GradientDrawable.Orientation.LEFT_RIGHT
@@ -469,11 +490,12 @@ An extremely unremarkable, casual iPhone snapshot of [SUBJECT/SCENE]. Careless f
                 sendBroadcast(Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(File(path))))
             }
         }
-        content.addView(btnDl)
+        content.addView(btnDl, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT))
 
-        layout.addView(content)
-        scrollView.addView(layout)
-        setContentView(scrollView)
+        scrollView.addView(content)
+        root.addView(scrollView, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT))
+
+        setContentView(root)
     }
 
     private fun generateImage(text: String): Bitmap {
