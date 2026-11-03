@@ -32,7 +32,7 @@ jobs:
       - name: Find APK
         id: apk
         run: |
-          APK=$(find . -name "*.apk" -type f | head -1)
+          APK=$(find app/build/outputs/apk/debug -name "*.apk" -type f | head -1)
           echo "apk=$APK" >> $GITHUB_OUTPUT
           echo "Found APK: $APK"
       
@@ -41,12 +41,11 @@ jobs:
           APK=${{ steps.apk.outputs.apk }}
           SIGNED=$(dirname $APK)/MyInsta-signed.apk
           $ANDROID_HOME/build-tools/34.0.0/apksigner sign --ks debug.keystore --ks-pass pass:android --key-pass pass:android --ks-key-alias androiddebugkey --out $SIGNED $APK
-          echo "signed=$SIGNED" >> $GITHUB_OUTPUT
           echo "Signed APK: $SIGNED"
       
       - name: Upload signed APK
         uses: actions/upload-artifact@v4
         with:
-          name: MyInsta-APK
+          name: MyInsta-Signed-APK
           path: ${{ steps.apk.outputs.apk }}
           retention-days: 30
